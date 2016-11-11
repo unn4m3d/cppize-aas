@@ -13,7 +13,7 @@ git init
 # build script's --create option is broken, so create heroku app manually
 heroku create --buildpack "https://github.com/crystal-lang/heroku-buildpack-crystal.git" <appname>
 cd ../cppize-aas
-crystal ./build-heroku.cr -- ../heroku_distr # This will automatically deploy your app.
+crystal ./build_heroku.cr -- ../heroku_distr # This will automatically deploy your app.
 ```
 
 ## Contributing
