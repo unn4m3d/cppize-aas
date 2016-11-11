@@ -1,0 +1,6 @@
+version: 1.0
+shards:
+  cppize:
+    github: unn4m3d/cppize
+    commit: 150ce224fb80f9395ade688bedd98f93a41fc90c
+

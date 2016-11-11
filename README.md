@@ -20,7 +20,7 @@ TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it ( https://github.com/[your-github-name]/cppize_aas/fork )
+1. Fork it ( https://github.com/unn4m3d/cppize_aas/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
@@ -28,4 +28,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) unn4m3d - creator, maintainer
+- [unn4m3d](https://github.com/unn4m3d) - creator, maintainer
