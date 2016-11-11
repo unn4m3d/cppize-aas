@@ -1,9 +1,17 @@
 require "./cppize_aas/*"
 require "cppize"
 require "http/server"
+require "option_parser"
+
 
 begin
-  server = HTTP::Server.new(1337) do |ctx|
+  port = 1337
+
+  OptionParser.parse! do |o|
+    o.on("-pPORT","--port PORT","Set port"){|p| port = p.to_i}
+  end
+
+  server = HTTP::Server.new(port) do |ctx|
     ctx.response.content_type = "application/json"
     begin
       transpiler = Cppize::Transpiler.new
