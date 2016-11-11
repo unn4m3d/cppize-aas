@@ -8,11 +8,12 @@ begin
   port = 1337
 
   OptionParser.parse! do |o|
-    o.on("-pPORT","--port PORT","Set port"){|p| port = p.to_i}
+    o.on("-pPORT","--port PORT","Set port"){|p| port = p.to_i; puts port}
   end
 
-  server = HTTP::Server.new(port) do |ctx|
+  server = HTTP::Server.new("0.0.0.0",port) do |ctx|
     ctx.response.content_type = "application/json"
+    ctx.response.headers.add("Access-Control-Allow-Origin","*")
     begin
       transpiler = Cppize::Transpiler.new
       warnings = [] of Cppize::Transpiler::Error
@@ -33,8 +34,11 @@ begin
     end
   end
 
+  puts "Starting"
   server.listen
+  puts "..."
 
 ensure
+  puts "Crashed"
   server.close unless server.nil?
 end
