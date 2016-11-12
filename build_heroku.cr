@@ -133,7 +133,7 @@ rescue e
 end
 
 puts "Updating deps..."
-system("crystal deps")
+system("crystal deps update")
 puts "Building executable..."
 system("crystal build -o #{directory}/caas -s src/cppize_aas.cr --release")
 puts "Deploying"
