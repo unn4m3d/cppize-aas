@@ -5,16 +5,21 @@
 ## Building and deploying on Heroku
 
 Compilation step requires about 2GB of RAM, so it's recommended to build it on local machine :
+### First build:
 ```sh
-mkdir heroku_distr
 git clone https://github.com/unn4m3d/cppize-aas
-cd heroku_distr
-git init
-# build script's --create option is broken, so create heroku app manually
-heroku create --buildpack "https://github.com/crystal-lang/heroku-buildpack-crystal.git" <appname>
-cd ../cppize-aas
-crystal ./build_heroku.cr -- ../heroku_distr # This will automatically deploy your app.
+cd cppize-aas
+# This will automatically build and deploy this app
+crystal ./build_heroku.cr -- --create <appname> <folder> # For example, appname would be cppize-example, and folder would be ../heroku_dist
 ```
+
+### Next builds:
+```sh
+cd path/to/cppize-aas
+crystal ./build_heroku.cr -- <folder>
+```
+
+Provide `--buildpack` option to `build_heroku.cr` to use another buildpack
 
 ## Contributing
 

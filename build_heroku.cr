@@ -4,8 +4,8 @@ require "yaml"
 require "yaml/**"
 
 def failed(e)
-  puts "failed"
-  puts e.message
+  puts "failed".colorize.fore(:red)
+  puts e.message.colorize.fore(:red)
   exit 1
 end
 
@@ -26,19 +26,19 @@ end
 
 directory = ARGV.shift unless ARGV.empty?
 
-puts "CaaS for Heroku".colorize.fore(:blue).underline
+puts "CaaS for Heroku".colorize.fore(:blue).bold
 puts
 
 print "Checking for directory #{directory}... "
 
 if File.exists?(directory)
-  puts "exists"
+  puts "exists".colorize.fore(:green)
 else
-  puts "doesn't exist"
+  puts "doesn't exist".colorize.fore(:yellow)
   print "Making directory #{directory}... "
   begin
     Dir.mkdir directory
-    puts "done"
+    puts "done".colorize.fore(:green)
   rescue ex
     failed ex
   end
@@ -50,7 +50,7 @@ begin
     f.truncate
     f.puts("web: ./caas -p $PORT")
   end
-  puts "done"
+  puts "done".colorize.fore(:green)
 rescue ex
   failed ex
 end
@@ -61,19 +61,19 @@ begin
     f.truncate
     f.puts({"name" => "dummy","license" => "Beerware","version" => "0.1.0","authors" => ["unn4m3d"]}.to_yaml)
   end
-  puts "done"
+  puts "done".colorize.fore(:green)
 rescue ex
   failed ex
 end
 
 print "Checking for .git folder... "
 if File.exists?(File.join(directory,".git"))
-  puts "exists"
+  puts "exists".colorize.fore(:green)
   unless create.empty?
     print "Creating app #{create}..."
     begin
-      `heroku create "#{create}" --buildpack "#{buildpack}"`
-      puts "done"
+      `cd #{directory} && heroku create "#{create}" --buildpack "#{buildpack}"; cd #{File.dirname __FILE__}`
+      #puts "done"
     rescue ex
       failed ex
     end
@@ -88,15 +88,15 @@ else
       print "Creating git repo... "
       begin
         `git init`
-        puts "done"
+        puts "done".colorize.fore(:green)
       rescue e
         failed e
       end
 
       print "Creating app #{create}..."
       begin
-        `heroku create "#{create}" --buildpack "#{buildpack}"`
-        puts "done"
+        `cd #{directory} && heroku create "#{create}" --buildpack "#{buildpack}"; cd #{File.dirname __FILE__}`
+        #puts "done"
       rescue ex
         failed ex
       end
@@ -109,13 +109,13 @@ end
 print "Checking for directory #{directory}/src... "
 
 if File.exists?(File.join(directory,"src"))
-  puts "exists"
+  puts "exists".colorize.fore(:green)
 else
-  puts "doesn't exist"
+  puts "doesn't exist".colorize.fore(:yellow)
   print "Making directory #{directory}/src... "
   begin
     Dir.mkdir File.join(directory,"src")
-    puts "done"
+    puts "done".colorize.fore(:green)
   rescue ex
     failed ex
   end
@@ -127,7 +127,7 @@ begin
     f.truncate
     f.puts("exit 0")
   end
-  puts "done"
+  puts "done".colorize.fore(:green)
 rescue e
   failed e
 end
@@ -136,4 +136,5 @@ puts "Updating deps..."
 system("crystal deps")
 puts "Building executable..."
 system("crystal build -o #{directory}/caas -s src/cppize_aas.cr --release")
+puts "Deploying"
 system("cd #{directory} && git add . && git commit -am 'Auto-build' && git push heroku master; cd #{File.dirname __FILE__}")
