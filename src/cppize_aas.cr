@@ -3,6 +3,7 @@ require "cppize"
 require "http/server"
 require "option_parser"
 
+AVAILABLE_TRANSPILER_FEATURES = ["unsafe-cast","auto-module-type"]
 
 begin
   port = 1337
@@ -21,7 +22,18 @@ begin
       transpiler.on_warning{|e| warnings << e}
       transpiler.on_error{|e| errors << e}
 
-      code = transpiler.parse_and_transpile(ctx.request.body.to_s,"<main>")
+      source = ctx.request.body.to_s
+
+      source.scan(/#=:cppize-feature:= ([^\n]+)\n/m) do |md|
+        opt = md[1].strip
+        if AVAILABLE_TRANSPILER_FEATURES.includes? opt
+          transpiler.options[opt] = ""
+        else
+          warnings << Cppize::Transpiler::Error.new("Unsupported feature #{opt}",nil,nil,"<main>")
+        end
+      end
+
+      code = transpiler.parse_and_transpile(source,"<main>")
 
       ctx.response.puts({
         "code" => code,
