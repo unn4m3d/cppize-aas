@@ -2,5 +2,5 @@ version: 1.0
 shards:
   cppize:
     github: unn4m3d/cppize
-    commit: 150ce224fb80f9395ade688bedd98f93a41fc90c
+    commit: 337ee9fb182de4826d5e3760c2c9fb51d4e57f49
 

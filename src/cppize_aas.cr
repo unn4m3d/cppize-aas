@@ -19,17 +19,24 @@ begin
       transpiler = Cppize::Transpiler.new
       warnings = [] of Cppize::Transpiler::Error
       errors = [] of Cppize::Transpiler::Error
+      tr_warnings = [] of String
       transpiler.on_warning{|e| warnings << e}
       transpiler.on_error{|e| errors << e}
 
       source = ctx.request.body.to_s
 
-      source.scan(/#=:cppize-feature:= ([^\n]+)\n/m) do |md|
+      source.scan(/#=:cppize-feature:=([^\n]+)\n/m) do |md|
+
         opt = md[1].strip
+        puts "Opt #{opt} (#{md[0]})"
         if AVAILABLE_TRANSPILER_FEATURES.includes? opt
-          transpiler.options[opt] = ""
+          if opt.nil?
+            tr_warnings << "Trying to pass nil feature"
+          else
+            transpiler.options[opt] = ""
+          end
         else
-          warnings << Cppize::Transpiler::Error.new("Unsupported feature #{opt}",nil,nil,"<main>")
+          tr_warnings << "Unsupported feature #{opt}"
         end
       end
 
@@ -38,7 +45,7 @@ begin
       ctx.response.puts({
         "code" => code,
         "errors" => errors.map(&.to_h),
-        "warnings" => warnings.map(&.to_h)
+        "warnings" => warnings.map(&.to_h) + tr_warnings.map{|x| {"message"=>x}}
       }.to_json)
 
     rescue ex
