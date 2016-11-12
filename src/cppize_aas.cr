@@ -25,8 +25,8 @@ begin
 
       ctx.response.puts({
         "code" => code,
-        "errors" => errors.map(&.to_s),
-        "warnings" => warnings.map(&.to_s)
+        "errors" => errors.map(&.to_h),
+        "warnings" => warnings.map(&.to_h)
       }.to_json)
 
     rescue ex
